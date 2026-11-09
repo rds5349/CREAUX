@@ -1,3 +1,28 @@
+# CREAUX mobile verification — 2026-11-09
+
+## Verified today
+- Installed dependencies successfully; committed package-lock.json for reproducible installs with npm ci.
+- Fixed React Native compatibility (0.81.5), aligned React DOM to React 19.1.0, added React Native Web, and installed required Expo Constants and Linking native dependencies.
+- Pinned Supabase JS to the installed 2.119.0 version.
+- npm run typecheck: PASS.
+- npm run check: PASS (16 source/configuration checks).
+- npx expo install --check: dependencies up to date.
+- npx expo-doctor: PASS (18/18 checks after fixes).
+- npm run export: PASS for iOS, Android and web.
+
+These exports are JavaScript/assets, not signed IPA/APK builds. No device, browser interaction, authenticated user-flow, or payment tests have been completed. No production or staging database changes were made today.
+
+## Next beta milestone
+1. Host the web preview and test screen navigation, layout and session behavior.
+2. Configure dedicated staging test accounts and test login, profiles, privacy and Flock requests between two users.
+3. Implement approved terms/privacy and server-side versioned consent before enabling signup.
+4. Complete booking, payments in test mode, messaging and notifications for the full beta scope.
+5. Verify current Expo Go compatibility or prepare a signed development build, then test on real devices.
+
+The repository source is current; CREAUX-mobile-github-upload.zip is the original import snapshot. The import workflow is retained for history and will refuse to overwrite changed source if rerun.
+
+## Historical record (superseded where noted above)
+
 # CREAUX staging verification — 2026-11-05
 
 ## Completed against connected Supabase staging project

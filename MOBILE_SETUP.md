@@ -1,11 +1,19 @@
 # CREAUX mobile setup
 
-This is an Expo source project, not an installable app.
+Use the extracted repository source. The ZIP is the original import snapshot and is no longer the latest code.
 
-1. Upload the extracted files and folders into the repository root (do not upload only this ZIP).
-2. Run `npm install` in a Node-capable cloud environment.
-3. Run `npx tsc --noEmit` and `npx expo start --web` for initial verification.
-4. For local development create `.env` from `.env.example`; do not commit `.env`.
-5. Registration is intentionally disabled pending consent tracking and terms.
+```bash
+npm ci
+cp .env.example .env
+npm run typecheck
+npm run check
+npx expo-doctor
+npm run export
+npm run web
+```
 
-Staging backend only. Do not use production service-role credentials in this client.
+The example environment points to staging. Never commit `.env` or private credentials.
+
+`npm run export` creates web assets and iOS/Android JavaScript bundles, not signed installable apps. Native device testing and authenticated user-flow testing are still required. Signup remains disabled pending terms/privacy and versioned consent tracking.
+
+See VERIFIED_PROGRESS.md for the latest verified checks and remaining beta work.

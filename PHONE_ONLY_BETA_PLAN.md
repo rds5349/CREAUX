@@ -6,19 +6,20 @@
 - Mobile auth session handling configured for foreground/background transitions.
 
 ## What is not ready
-- No verified npm install, TypeScript compilation, Expo bundle, live two-user test, or installable iPhone build.
+- Dependency installation, TypeScript compilation and Expo bundles have been verified; see VERIFIED_PROGRESS.md.
+- No live two-user test or installable iPhone build yet.
 - Sign-up is intentionally disabled (`EXPO_PUBLIC_SIGNUP_ENABLED=false`) until real terms/privacy URLs and versioned server-side consent recording are deployed.
 - Messaging, production booking checkout, push notifications, Stripe Connect and Apple Pay are not complete.
 
 ## Phone-only options
-1. **Free browser preview:** Once dependencies can install in a hosted development environment, run Expo web preview. This is not equivalent to a native iOS test.
+1. **Free browser preview:** Web dependencies are installed and web export is verified. A hosted preview still needs deployment. This is not equivalent to a native iOS test.
 2. **Expo Go:** May support a compatible development project, but Expo Go does not support every native library or every SDK combination. A reachable Expo development server and compatible Expo Go version are required. Verify current iOS availability before promising installation.
 3. **Native iOS/TestFlight:** Requires Apple signing credentials and typically an Apple Developer Program membership. Defer payment until the app passes web and backend tests.
 
 ## Next developer commands (in a network-enabled environment)
 ```bash
 cp .env.example .env
-npm install
+npm ci
 npx expo install --check
 npm run typecheck
 npx expo start --tunnel

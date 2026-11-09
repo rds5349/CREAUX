@@ -1,0 +1,15 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+const read=p=>fs.readFileSync(p,'utf8');
+const pkg=JSON.parse(read('package.json'));
+assert.equal(pkg.main,'expo-router/entry');
+for(const dep of ['expo','expo-router','react-native','@supabase/supabase-js','@react-native-async-storage/async-storage']) assert.ok(pkg.dependencies[dep],`Missing ${dep}`);
+for(const f of ['app/_layout.tsx','app/sign-in.tsx','app/sign-up.tsx','app/(tabs)/index.tsx','app/(tabs)/explore.tsx','app/(tabs)/flock.tsx','app/(tabs)/bookings.tsx','app/(tabs)/profile.tsx','src/lib/supabase.ts']) assert.ok(fs.existsSync(f),`Missing ${f}`);
+const env=read('.env.example');
+assert.match(env,/vvxasyquwumcyyjjtdvj\.supabase\.co/);
+assert.match(env,/EXPO_PUBLIC_SIGNUP_ENABLED=false/);
+assert.doesNotMatch(read('src/lib/supabase.ts'),/service_role|sb_secret_/);
+assert.match(read('src/services/userSearch.ts'),/find_flock_user_by_username/);
+assert.match(read('src/services/flockRequests.ts'),/responded_at/);
+console.log('PASS: 16 offline project configuration and source contract checks');
+console.log('NOTE: Not a TypeScript compile, dependency installation, device test, or Supabase user-flow test.');

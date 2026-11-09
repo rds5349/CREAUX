@@ -1,0 +1,11 @@
+import { useCallback, useState } from 'react';
+import { ActivityIndicator, FlatList, Text, TextInput, View } from 'react-native';
+import { useFocusEffect } from 'expo-router';
+import { getListings, type Listing } from '../../src/services/directory';
+import { Empty, PageTitle, palette } from '../../src/components/UI';
+export default function Explore(){
+ const [search,setSearch]=useState('');const [items,setItems]=useState<Listing[]>([]);const [busy,setBusy]=useState(true);const [error,setError]=useState('');
+ useFocusEffect(useCallback(()=>{let active=true;setBusy(true);getListings('').then(v=>{if(active){setItems(v);setError('');}}).catch(e=>{if(active)setError(e instanceof Error?e.message:'Could not load directory');}).finally(()=>{if(active)setBusy(false)});return()=>{active=false};},[]));
+ const term=search.trim().toLowerCase();const visible=items.filter(x=>!term||[x.display_name,x.category,x.city,x.description].some(y=>y.toLowerCase().includes(term)));
+ return <View style={{flex:1,backgroundColor:palette.paper,padding:20}}><PageTitle title="Explore" subtitle="Find professionals in your community."/><TextInput accessibilityLabel="Search professionals" placeholder="Search people, services, cities" placeholderTextColor={palette.muted} value={search} onChangeText={setSearch} style={{backgroundColor:'white',borderWidth:1,borderColor:palette.line,padding:14,borderRadius:12,marginBottom:18}}/>{busy?<ActivityIndicator/>:error?<Empty heading="Directory not enabled yet" detail="Professional listings will appear after the new privacy-safe directory schema is deployed."/>:<FlatList data={visible} keyExtractor={i=>i.id} ListEmptyComponent={<Empty heading="No professionals found" detail="Try a different search or check back as more professionals publish listings."/>} renderItem={({item})=><View style={{backgroundColor:'white',borderRadius:14,padding:18,marginBottom:12,borderWidth:1,borderColor:palette.line}}><Text style={{fontSize:18,fontWeight:'700',color:palette.ink}}>{item.display_name}</Text><Text style={{color:palette.muted,marginTop:5}}>{item.category}{item.city?' · '+item.city:''}</Text><Text style={{marginTop:9,color:palette.ink}}>{item.description}</Text></View>}/>}</View>
+}

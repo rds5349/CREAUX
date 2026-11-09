@@ -1,0 +1,4 @@
+import { Redirect, Tabs } from 'expo-router';
+import { ActivityIndicator, View } from 'react-native';
+import { useAuth } from '../../src/context/AuthContext';
+export default function TabsLayout(){const {session,loading}=useAuth();if(loading)return <View style={{flex:1,justifyContent:'center'}}><ActivityIndicator/></View>;if(!session)return <Redirect href="/sign-in"/>;return <Tabs screenOptions={{tabBarActiveTintColor:'#161923',tabBarInactiveTintColor:'#89919C',headerTitle:'CREAUX',tabBarStyle:{height:62,paddingBottom:8}}}><Tabs.Screen name="index" options={{title:'Home'}}/><Tabs.Screen name="explore" options={{title:'Explore'}}/><Tabs.Screen name="bookings" options={{title:'Bookings'}}/><Tabs.Screen name="flock" options={{title:'Flock'}}/><Tabs.Screen name="profile" options={{title:'Profile'}}/></Tabs>}

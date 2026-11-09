@@ -1,0 +1,3 @@
+import { ScrollView, Text, View } from 'react-native';
+import { PageTitle, Empty, palette } from '../../src/components/UI';
+export default function Home(){return <ScrollView style={{flex:1,backgroundColor:palette.paper}} contentContainerStyle={{padding:24}}><PageTitle title="Build your flock" subtitle="Your community, opportunities, and bookings in one place."/><Empty heading="Welcome to CREAUX" detail="Your personalized feed will appear here as the marketplace and flock systems come online."/><View style={{marginTop:24}}><Text style={{fontWeight:'700',fontSize:19,color:palette.ink}}>Make connections that matter.</Text></View></ScrollView>}

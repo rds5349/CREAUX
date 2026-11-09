@@ -1,0 +1,8 @@
+import { useCallback, useState } from 'react';
+import { ActivityIndicator, FlatList, Text, View } from 'react-native';
+import { useFocusEffect } from 'expo-router';
+import { useAuth } from '../../src/context/AuthContext';
+import { supabase } from '../../src/lib/supabase';
+import { Empty, PageTitle, palette } from '../../src/components/UI';
+type Gathering={id:number;title:string;starts_at:string;lifecycle_status:string;place:string};
+export default function Bookings(){const {session}=useAuth();const [items,setItems]=useState<Gathering[]>([]);const [loading,setLoading]=useState(true);const [error,setError]=useState('');useFocusEffect(useCallback(()=>{let active=true;if(!session?.user.id)return;setLoading(true);supabase.from('gatherings').select('id,title,starts_at,lifecycle_status,place').eq('owner_id',session.user.id).order('starts_at',{ascending:true}).then(({data,error})=>{if(active){setItems((data??[]) as Gathering[]);setError(error?.message??'');setLoading(false)}});return()=>{active=false}},[session?.user.id]));return <View style={{flex:1,backgroundColor:palette.paper,padding:24}}><PageTitle title="Bookings" subtitle="Your scheduled CREAUX gatherings and service requests."/>{loading?<ActivityIndicator/>:error?<Empty heading="Unable to load bookings" detail={error}/>:items.length===0?<Empty heading="Nothing scheduled yet" detail="Bookings and gatherings you create will appear here."/>:<FlatList data={items} keyExtractor={i=>String(i.id)} renderItem={({item})=><View style={{padding:18,backgroundColor:'white',borderRadius:12,marginBottom:12}}><Text style={{fontSize:18,fontWeight:'700'}}>{item.title}</Text><Text>{new Date(item.starts_at).toLocaleString()}</Text><Text>{item.place} · {item.lifecycle_status}</Text></View>}/>}</View>}

@@ -1,0 +1,44 @@
+name: Import mobile source
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/import-mobile-source.yml']
+permissions:
+  contents: write
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify and extract reviewed package
+        run: |
+          python3 - <<'PY'
+          import hashlib, pathlib, zipfile
+          archive = pathlib.Path('CREAUX-mobile-github-upload.zip')
+          assert hashlib.sha256(archive.read_bytes()).hexdigest() == '2352cab0e295c40db4dbc31e712313546175f45b3a656621821a72ef2bb525c6', 'Package changed; review required'
+          with zipfile.ZipFile(archive) as z:
+              for info in z.infolist():
+                  p = pathlib.PurePosixPath(info.filename)
+                  assert not p.is_absolute() and '..' not in p.parts
+                  assert p.parts[0] not in ('.git', '.github')
+                  assert p.name != '.env'
+                  if info.is_dir():
+                      continue
+                  data = z.read(info)
+                  target = pathlib.Path(info.filename)
+                  if target.exists():
+                      assert target.read_bytes() == data, 'Existing file differs: ' + str(target)
+                  else:
+                      target.parent.mkdir(parents=True, exist_ok=True)
+                      target.write_bytes(data)
+          PY
+      - name: Check project
+        run: node scripts/check-project.mjs
+      - name: Commit extracted source
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add app src scripts app.json package.json tsconfig.json .env.example .gitignore *.md
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Import CREAUX mobile source with original folder structure"
+          git push origin HEAD:main
